@@ -1,7 +1,7 @@
 var request = require('request');
 var cheerio = require('cheerio');
 
-var searchTermOverall = '?s=+sophie+knowles';
+var searchTermOverall = '?s=\"hot+metal\"';
 //var url = 'http://www.ultiworld.com/?s=+' + searchTerm;
 var url = "http://www.ultiworld.com/";
 //var url = "http://www.ultiworld.com/page/3/";
