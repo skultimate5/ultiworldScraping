@@ -1,0 +1,8 @@
+{
+  "name": "ultiworldScraper",
+  "main": "cheerioTest.js",
+  "dependencies": {
+    "request": "latest",
+    "cheerio": "latest"
+  }
+}
