@@ -1,32 +1,36 @@
 var request = require('request');
 var cheerio = require('cheerio');
 
-var searchTermOverall = '?s=\"case+western\"';
+var searchTermOverall = '?s=\"hot+metal\"';
 //var url = 'http://www.ultiworld.com/?s=+' + searchTerm;
 var url = "http://www.ultiworld.com/";
 //var url = "http://www.ultiworld.com/page/3/";
+var year = 2015;
 
 var count = 1;
 var numArticles = 0;
+var numArticlesYear = 0;
 
-searching(url, searchTermOverall, count);
+searching(url, searchTermOverall, count, year);
 
-function searching(url, searchTerm, count){
-	getOnePageArticles(url, searchTerm, count, function(length){
+function searching(url, searchTerm, count, year){
+	getOnePageArticles(url, searchTerm, count, year, function(length, certainYearArticles){
 		numArticles = numArticles + length;
 		console.log(count + " numArticles: " + length + "\nTotal numArticles: " + numArticles);
+		numArticlesYear = numArticlesYear + certainYearArticles.length;
+		console.log(count + " " + year + " articles: " + certainYearArticles.length + "\nTotal numArticlesYear: " + numArticlesYear);
 		if (length == 10){
 			count++
 			if (count > 1){
 				console.log("Searching page " + count + "...");
-				searching(url, searchTerm, count)
+				searching(url, searchTerm, count, year)
 			}
 		}
 	});
 }
 
 
-function getOnePageArticles(url, searchTerm, count, callback){
+function getOnePageArticles(url, searchTerm, count, year, callback){
 	request(url + "page/" + count + "/" + searchTerm, function(err, resp, body){
 
 		//Check for error
@@ -43,11 +47,14 @@ function getOnePageArticles(url, searchTerm, count, callback){
 		  $ = cheerio.load(body);
 		  var listElements = $('.snippet-excerpt__heading'); 		//.text() for each element in this gives you the name of each article
 		  var datesPosted = $('.snippet-excerpt__byline');
+		  var certainYearArticles = [];
 		  $(datesPosted).each(function(i, date){
 		  	var dateHTML = $(date).html();
 		  	var substring = dateHTML.substring(0,17).split(" ")[2]		//getting year of article
-		    console.log(substring);
+		  	if (substring == '' + year){
+		  		certainYearArticles.push($(listElements[0]).text());
+		  	}
 		  });
-		  callback(listElements.length);
+		  callback(listElements.length, certainYearArticles);
 	});
 }
