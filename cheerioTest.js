@@ -1,7 +1,7 @@
 var request = require('request');
 var cheerio = require('cheerio');
 
-var searchTermOverall = '?s=\"hot+metal\"';
+var searchTermOverall = '?s=\"case+western\"';
 //var url = 'http://www.ultiworld.com/?s=+' + searchTerm;
 var url = "http://www.ultiworld.com/";
 //var url = "http://www.ultiworld.com/page/3/";
@@ -41,11 +41,13 @@ function getOnePageArticles(url, searchTerm, count, callback){
 
 		  console.log(url + "page/" + count + "/" + searchTerm)
 		  $ = cheerio.load(body);
-		  var listElements = $('.snippet-excerpt__heading'); //use your CSS selector here
-		  //console.log(listElements);
-		  /*$(listElements).each(function(i, list){
-		    console.log($(list).text());
-		  });*/
+		  var listElements = $('.snippet-excerpt__heading'); 		//.text() for each element in this gives you the name of each article
+		  var datesPosted = $('.snippet-excerpt__byline');
+		  $(datesPosted).each(function(i, date){
+		  	var dateHTML = $(date).html();
+		  	var substring = dateHTML.substring(0,17).split(" ")[2]		//getting year of article
+		    console.log(substring);
+		  });
 		  callback(listElements.length);
 	});
 }
