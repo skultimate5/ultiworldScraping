@@ -1,17 +1,18 @@
 var request = require('request');
 var cheerio = require('cheerio');
 
-var searchTermOverall = '?s=\"hot+metal\"';
+var searchTermOverall = '?s=\"case+western\"';
+var searchTermMultiple = '?s=\"case+western\"+%2B+\"sophie+knowles\"'
 //var url = 'http://www.ultiworld.com/?s=+' + searchTerm;
 var url = "http://www.ultiworld.com/";
 //var url = "http://www.ultiworld.com/page/3/";
-var year = 2015;
+var year = 2014;
 
 var count = 1;
 var numArticles = 0;
 var numArticlesYear = 0;
 
-searching(url, searchTermOverall, count, year);
+searching(url, searchTermMultiple, count, year);
 
 function searching(url, searchTerm, count, year){
 	getOnePageArticles(url, searchTerm, count, year, function(length, certainYearArticles){
@@ -19,6 +20,9 @@ function searching(url, searchTerm, count, year){
 		console.log(count + " numArticles: " + length + "\nTotal numArticles: " + numArticles);
 		numArticlesYear = numArticlesYear + certainYearArticles.length;
 		console.log(count + " " + year + " articles: " + certainYearArticles.length + "\nTotal numArticlesYear: " + numArticlesYear);
+		for (var i = 0; i < certainYearArticles.length; i++){
+			console.log(certainYearArticles[i])
+		}
 		if (length == 10){
 			count++
 			if (count > 1){
@@ -52,7 +56,7 @@ function getOnePageArticles(url, searchTerm, count, year, callback){
 		  	var dateHTML = $(date).html();
 		  	var substring = dateHTML.substring(0,17).split(" ")[2]		//getting year of article
 		  	if (substring == '' + year){
-		  		certainYearArticles.push($(listElements[0]).text());
+		  		certainYearArticles.push($(listElements[i]).text());
 		  	}
 		  });
 		  callback(listElements.length, certainYearArticles);
