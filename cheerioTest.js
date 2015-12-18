@@ -27,11 +27,12 @@ app.get('/myForm', function(req, response){
 	var numArticles = 0;
 	var numArticlesYear = 0;
 	var searchVal2 = formattedSearchVal;
+	var doneBoolean = false;
 
 	searching(url, searchVal2, count, year);
 
-	function searching(url, searchTerm, count, year){
-		getOnePageArticles(url, searchTerm, count, year, function(length, certainYearArticles){
+	function searching(url, searchTerm, count, year, doneBoolean){
+		getOnePageArticles(url, searchTerm, count, year, doneBoolean, function(length, certainYearArticles, doneBoolean){
 			numArticles = numArticles + length;
 			console.log(count + " numArticles: " + length + "\nTotal numArticles: " + numArticles);
 			numArticlesYear = numArticlesYear + certainYearArticles.length;
@@ -39,7 +40,7 @@ app.get('/myForm', function(req, response){
 			for (var i = 0; i < certainYearArticles.length; i++){
 				console.log(certainYearArticles[i])
 			}
-			if (length == 10){
+			if (!doneBoolean){
 				count++
 				if (count > 1){
 					console.log("Searching page " + count + "...");
@@ -56,7 +57,7 @@ app.get('/myForm', function(req, response){
 	}
 
 
-	function getOnePageArticles(url, searchTerm, count, year, callback){
+	function getOnePageArticles(url, searchTerm, count, year, doneBoolean, callback){
 		request(url + "page/" + count + "/" + searchTerm, function(err, resp, body){
 
 			//Check for error
@@ -71,6 +72,10 @@ app.get('/myForm', function(req, response){
 
 			  console.log(url + "page/" + count + "/" + searchTerm)
 			  $ = cheerio.load(body);
+			  var previousPageButton = $('.paging-nav__previous');
+			  if (!previousPageButton[0]){
+			  	doneBoolean = true;
+			  }			  
 			  var listElements = $('.snippet-excerpt__heading'); 		//.text() for each element in this gives you the name of each article
 			  var datesPosted = $('.snippet-excerpt__byline');
 			  var certainYearArticles = [];
@@ -81,7 +86,7 @@ app.get('/myForm', function(req, response){
 			  		certainYearArticles.push($(listElements[i]).text());
 			  	}
 			  });
-			  callback(listElements.length, certainYearArticles);
+			  callback(listElements.length, certainYearArticles, doneBoolean);
 		});
 	}
 });
