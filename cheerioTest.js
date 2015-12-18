@@ -17,58 +17,18 @@ app.get('/', function(request, response) {
   });
 });
 
-app.get('/myForm', function(request, response){
-	var searchVal = request.query.name;
+app.get('/myForm', function(req, response){
+	var searchVal = req.query.name;
 	console.log("Search Value is: " + searchVal)
 	var formattedSearchVal = formatSearchVal(searchVal);
-	doTheSearch(formattedSearchVal);
-	response.render('index', {
- 		results: searchVal
-	});
-})
-
-app.get('/searched', function(request, response) {
-	var numArticles = doTheSearch();
-	setTimeout(function(){
-		response.render('index', {
-		  	results: numArticles
-		});
-	}, 1000)
-  
-});
-
-app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
-});
-
-function formatSearchVal(searchVal){
-	var wordArray = searchVal.split(" ");
-	var middleTerm = wordArray[0];
-	for (var i = 1; i < wordArray.length; i++){
-		if(wordArray[i].length != 0){
-			middleTerm = middleTerm + "+" + wordArray[i];
-		}
-	}
-	var searchTerm = '?s=\"' + middleTerm + "\"";
-	console.log(searchTerm);
-	return searchTerm
-}
-
-function doTheSearch(searchVal){
-	//var searchTermOverall = '?s=\"case+western\"';
-	//var searchTermMultiple = '?s=\"case+western\"+%2B+\"sophie+knowles\"'
-	//var url = 'http://www.ultiworld.com/?s=+' + searchTerm;
 	var url = "http://www.ultiworld.com/";
-	//var url = "http://www.ultiworld.com/page/3/";
 	var year = 2014;
-
 	var count = 1;
 	var numArticles = 0;
 	var numArticlesYear = 0;
+	var searchVal2 = formattedSearchVal;
 
-	var completed = false;
-
-	searching(url, searchVal, count, year);
+	searching(url, searchVal2, count, year);
 
 	function searching(url, searchTerm, count, year){
 		getOnePageArticles(url, searchTerm, count, year, function(length, certainYearArticles){
@@ -88,6 +48,9 @@ function doTheSearch(searchVal){
 			}
 			else{
 				console.log("Done Searching")
+				response.render('index', {
+			 		results: numArticles
+				});
 			}
 		});
 	}
@@ -121,5 +84,32 @@ function doTheSearch(searchVal){
 			  callback(listElements.length, certainYearArticles);
 		});
 	}
+});
+
+app.get('/searched', function(request, response) {
+	var numArticles = doTheSearch();
+	setTimeout(function(){
+		response.render('index', {
+		  	results: numArticles
+		});
+	}, 1000)
+  
+});
+
+app.listen(app.get('port'), function() {
+  console.log('Node app is running on port', app.get('port'));
+});
+
+function formatSearchVal(searchVal){
+	var wordArray = searchVal.split(" ");
+	var middleTerm = wordArray[0];
+	for (var i = 1; i < wordArray.length; i++){
+		if(wordArray[i].length != 0){
+			middleTerm = middleTerm + "+" + wordArray[i];
+		}
+	}
+	var searchTerm = '?s=\"' + middleTerm + "\"";
+	console.log(searchTerm);
+	return searchTerm
 }
 
