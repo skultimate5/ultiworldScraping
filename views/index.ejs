@@ -31,15 +31,16 @@
     <!-- FORM TO CREATE TODOS -->
     <div id="todo-form" class="row">
       <div class="col-sm-8 col-sm-offset-2 text-center">
-        <form>
+        <form action="/myform" method="GET">
           <div class="form-group">
 
             <!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
-            <input type="text" class="form-control input-lg text-center" placeholder="Hot Metal">
+            <input type="text" class="form-control input-lg text-center" name="name" placeholder="Hot Metal">
           </div>
 
           <!-- createToDo() WILL CREATE NEW TODOS -->
-          <a href="/searched" class="btn btn-primary btn-lg">Search</a>
+          <!--<a href="/searched" class="btn btn-primary btn-lg">Search</a>-->
+          <input type="submit" value="Submit"/>
           <!--<button type="submit" class="btn btn-primary btn-lg" >Search</button>-->
         </form>
       </div>

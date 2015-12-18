@@ -13,24 +13,50 @@ app.set('view engine', 'ejs');
 
 app.get('/', function(request, response) {
   response.render('index', {
-  	results: null
+  	results: null,
   });
 });
 
+app.get('/myForm', function(request, response){
+	var searchVal = request.query.name;
+	console.log("Search Value is: " + searchVal)
+	var formattedSearchVal = formatSearchVal(searchVal);
+	doTheSearch(formattedSearchVal);
+	response.render('index', {
+ 		results: searchVal
+	});
+})
+
 app.get('/searched', function(request, response) {
-	doTheSearch();
-  response.render('index', {
-  	results: "10 Articles"
-  });
+	var numArticles = doTheSearch();
+	setTimeout(function(){
+		response.render('index', {
+		  	results: numArticles
+		});
+	}, 1000)
+  
 });
 
 app.listen(app.get('port'), function() {
   console.log('Node app is running on port', app.get('port'));
 });
 
-function doTheSearch(){
-	var searchTermOverall = '?s=\"case+western\"';
-	var searchTermMultiple = '?s=\"case+western\"+%2B+\"sophie+knowles\"'
+function formatSearchVal(searchVal){
+	var wordArray = searchVal.split(" ");
+	var middleTerm = wordArray[0];
+	for (var i = 1; i < wordArray.length; i++){
+		if(wordArray[i].length != 0){
+			middleTerm = middleTerm + "+" + wordArray[i];
+		}
+	}
+	var searchTerm = '?s=\"' + middleTerm + "\"";
+	console.log(searchTerm);
+	return searchTerm
+}
+
+function doTheSearch(searchVal){
+	//var searchTermOverall = '?s=\"case+western\"';
+	//var searchTermMultiple = '?s=\"case+western\"+%2B+\"sophie+knowles\"'
 	//var url = 'http://www.ultiworld.com/?s=+' + searchTerm;
 	var url = "http://www.ultiworld.com/";
 	//var url = "http://www.ultiworld.com/page/3/";
@@ -40,7 +66,9 @@ function doTheSearch(){
 	var numArticles = 0;
 	var numArticlesYear = 0;
 
-	searching(url, searchTermMultiple, count, year);
+	var completed = false;
+
+	searching(url, searchVal, count, year);
 
 	function searching(url, searchTerm, count, year){
 		getOnePageArticles(url, searchTerm, count, year, function(length, certainYearArticles){
@@ -57,6 +85,9 @@ function doTheSearch(){
 					console.log("Searching page " + count + "...");
 					searching(url, searchTerm, count, year)
 				}
+			}
+			else{
+				console.log("Done Searching")
 			}
 		});
 	}
