@@ -13,7 +13,9 @@ app.set('view engine', 'ejs');
 
 app.get('/', function(request, response) {
   response.render('index', {
-  	results: null,
+  	numArticles: null,
+  	numArticlesYear: null,
+	year: null
   });
 });
 
@@ -49,6 +51,7 @@ app.get('/myForm', function(req, response){
 			}
 			else{
 				console.log("Done Searching")
+				console.log(numArticles)
 				response.render('index', {
 			 		numArticles: numArticles,
 			 		numArticlesYear: numArticlesYear,
