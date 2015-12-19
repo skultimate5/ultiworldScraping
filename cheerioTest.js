@@ -50,7 +50,9 @@ app.get('/myForm', function(req, response){
 			else{
 				console.log("Done Searching")
 				response.render('index', {
-			 		results: numArticles
+			 		numArticles: numArticles,
+			 		numArticlesYear: numArticlesYear,
+			 		year: year
 				});
 			}
 		});
