@@ -31,7 +31,7 @@
     <!-- FORM TO CREATE TODOS -->
     <div id="todo-form" class="row">
       <div class="col-sm-8 col-sm-offset-2 text-center">
-        <form action="/search/:<%= count %>/:<%= searchVal%>/:<%=numArticlesTotal%>" method="GET">
+        <form action="/search/:<%= count %>/:<%= searchVal%>/:<%=numArticlesTotal%>/:<%=certainYearArticlesObj%>" method="GET">
           <div class="form-group">
 
             <input type="text" class="form-control input-lg text-center" name="name" placeholder="Hot Metal">
@@ -49,6 +49,13 @@
       <div class="col-sm-4 col-sm-offset-4">
         <p><%= numArticles %> Articles Total</p>
         <p><%= numArticlesYear %> Articles from <%= year %></p>
+        <p>
+          <ul>
+            <% for(var i=0; i<certainYearArticles.length; i++) {%>
+               <li><a href="<%=certainYearArticlesLink[i]%>"><%= certainYearArticles[i] %></a></li>
+            <% } %>
+          </ul>
+        </p>
       </div>
     </div>
 
