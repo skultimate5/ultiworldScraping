@@ -29,22 +29,22 @@ app.get('/', function(request, response) {
 //try saving info in database from search, and then loading data on completedSearch page
 //also have a loading screen which may need to be done this way
 
-app.get('/search/:count/:searchVal/:numArticlesTotal/:certainYearArticlesObj', function(req, response){
-	var count = req.params.count.split(":")[1];
-	console.log(req.params.certainYearArticlesObj)
-	if (count == 1){
-		var searchVal = req.query.name;
+app.get('/search', function(req, response){
+	var queryReturn = req.query;
+	console.log(queryReturn);
+	if (queryReturn.count == undefined){
+		var count = 1;
+		var searchVal = queryReturn.name;
+		var numArticlesTotal = 0;
 		var certainYearArticles = [];
 		var certainYearArticlesLink = [];
 	}
 	else{
-		var searchVal = req.params.searchVal.split(":")[1];
-		//var certainYearArticlesArray = req.params.certainYearArticles.split(":");
-		//var certainYearArticlesArrayLink = req.params.certainYearArticlesLink.split(":");
-		console.log("here")
-		console.log(qs.parse(req.params.certainYearArticlesObj));
-		var certainYearArticlesArray = certainYearArticlesObj.certainYearArticles;
-		var certainYearArticlesLink = certainYearArticlesObj.certainYearArticlesLink;
+		var count = queryReturn.count;
+		var searchVal = queryReturn.searchVal;
+		var numArticlesTotal = queryReturn.numArticlesTotal;
+		var certainYearArticlesArray = queryReturn.certainYearArticles;
+		var certainYearArticlesArrayLink = queryReturn.certainYearArticlesLink;
 		var certainYearArticles = [];
 		var certainYearArticlesLink = [];
 		for(var i = 1; i < certainYearArticlesArray.length; i++){
@@ -52,12 +52,6 @@ app.get('/search/:count/:searchVal/:numArticlesTotal/:certainYearArticlesObj', f
 			certainYearArticlesLink.push(certainYearArticlesArrayLink[i])
 		}
 	}
-	var certainYearArticlesObj = {
-		certainYearArticles: certainYearArticles,
-		certainYearArticlesLink: certainYearArticlesLink
-	};
-	console.log(certainYearArticlesObj)
-	var numArticlesTotal = req.params.numArticlesTotal.split(":")[1];
 	console.log("Search Value is: " + searchVal)
 	var formattedSearchVal = formatSearchVal(searchVal);
 	var year = 2014;
@@ -65,16 +59,19 @@ app.get('/search/:count/:searchVal/:numArticlesTotal/:certainYearArticlesObj', f
 	var numArticlesYear = 0;
 	var doneBoolean = false;
 
-	getOnePageArticles(formattedSearchVal, count, year, doneBoolean, certainYearArticlesObj.certainYearArticles, certainYearArticlesObj.certainYearArticlesLink, function(numArticles, certainYearArticles, certainYearArticlesLink, doneBoolean){
-		var certainYearArticlesObj = {
-			certainYearArticles: certainYearArticles,
-			certainYearArticlesLink: certainYearArticlesLink
-		}
+	getOnePageArticles(formattedSearchVal, count, year, doneBoolean, certainYearArticles, certainYearArticlesLink, function(numArticles, certainYearArticles, certainYearArticlesLink, doneBoolean){
 		count = parseInt(count) + 1;
 		numArticlesTotal = parseInt(numArticlesTotal) + numArticles;
 		if (!doneBoolean){
-			var query = qs.stringify(certainYearArticlesObj)
-			response.redirect('/search/:' + count + '/:' + searchVal + '/:' + numArticlesTotal + '/:' + query)
+			var queryObject = {
+				count: count,
+				searchVal: searchVal,
+				numArticlesTotal: numArticlesTotal,
+				certainYearArticles: certainYearArticles,
+				certainYearArticlesLink: certainYearArticlesLink
+			}
+			var query = qs.stringify(queryObject)
+			response.redirect('/search?' + query);
 		}
 		else{
 			response.render('index', {
