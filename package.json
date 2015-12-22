@@ -13,6 +13,7 @@
     "request": "latest",
     "cheerio": "latest",
     "express": "latest",
-    "ejs": "latest"
+    "ejs": "latest",
+    "qs": "5.0"
   }
 }
