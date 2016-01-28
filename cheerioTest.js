@@ -116,7 +116,7 @@ function getOnePageArticles(searchTerm, count, year, doneBoolean, certainYearArt
 		  var datesPosted = $('.snippet-excerpt__byline');			//date for each article
 		  $(datesPosted).each(function(i, date){
 	  	  	var dateHTML = $(date).html();
-	  		var substring = dateHTML.substring(0,17).split(" ")[2]		//getting year of article
+	  		var substring = dateHTML.substring(0,21).split(" ")[6]		//getting year of article
 	  		if (substring == '' + year){								//if year matches, add to this year article list
 	  			console.log($(listElements[i]).children().attr('href'));
 	  			certainYearArticles.push($(listElements[i]).text());
