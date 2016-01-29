@@ -31,7 +31,6 @@ app.get('/', function(request, response) {
 
 app.get('/search', function(req, response){
 	var queryReturn = req.query;
-	console.log(queryReturn);
 	if (queryReturn.count == undefined){
 		var count = 1;
 		var searchVal = queryReturn.name;
@@ -47,9 +46,11 @@ app.get('/search', function(req, response){
 		var certainYearArticlesArrayLink = queryReturn.certainYearArticlesLink;
 		var certainYearArticles = [];
 		var certainYearArticlesLink = [];
-		for(var i = 1; i < certainYearArticlesArray.length; i++){
-			certainYearArticles.push(certainYearArticlesArray[i])
-			certainYearArticlesLink.push(certainYearArticlesArrayLink[i])
+		if (certainYearArticlesArray != undefined) {
+			for(var i = 0; i < certainYearArticlesArray.length; i++){
+				certainYearArticles.push(certainYearArticlesArray[i])
+				certainYearArticlesLink.push(certainYearArticlesArrayLink[i])
+			}
 		}
 	}
 	console.log("Search Value is: " + searchVal)
@@ -71,6 +72,7 @@ app.get('/search', function(req, response){
 				certainYearArticlesLink: certainYearArticlesLink
 			}
 			var query = qs.stringify(queryObject)
+			console.log(query)
 			response.redirect('/search?' + query);
 		}
 		else{
@@ -118,7 +120,6 @@ function getOnePageArticles(searchTerm, count, year, doneBoolean, certainYearArt
 	  	  	var dateHTML = $(date).html();
 	  		var substring = dateHTML.substring(0,21).split(" ")[6]		//getting year of article
 	  		if (substring == '' + year){								//if year matches, add to this year article list
-	  			console.log($(listElements[i]).children().attr('href'));
 	  			certainYearArticles.push($(listElements[i]).text());
 	  			certainYearArticlesLink.push($(listElements[i]).children().attr('href'));
 	  		}
