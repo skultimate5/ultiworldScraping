@@ -34,11 +34,13 @@ app.get('/search', function(req, response){
 	if (queryReturn.count == undefined){
 		var count = 1;
 		var searchVal = queryReturn.name;
+		var year = queryReturn.year;
 		var numArticlesTotal = 0;
 		var certainYearArticles = [];
 		var certainYearArticlesLink = [];
 	}
 	else{
+		var year = queryReturn.year;
 		var count = queryReturn.count;
 		var searchVal = queryReturn.searchVal;
 		var numArticlesTotal = queryReturn.numArticlesTotal;
@@ -54,8 +56,9 @@ app.get('/search', function(req, response){
 		}
 	}
 	console.log("Search Value is: " + searchVal)
+	console.log("Search Year is: " + year)
 	var formattedSearchVal = formatSearchVal(searchVal);
-	var year = 2014;
+	//var year = 2014;
 	var numArticles = 0;
 	var numArticlesYear = 0;
 	var doneBoolean = false;
@@ -69,7 +72,8 @@ app.get('/search', function(req, response){
 				searchVal: searchVal,
 				numArticlesTotal: numArticlesTotal,
 				certainYearArticles: certainYearArticles,
-				certainYearArticlesLink: certainYearArticlesLink
+				certainYearArticlesLink: certainYearArticlesLink,
+				year: year
 			}
 			var query = qs.stringify(queryObject)
 			console.log(query)
